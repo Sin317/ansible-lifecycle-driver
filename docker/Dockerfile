@@ -37,6 +37,7 @@ COPY --chown=ald:ald ald_config.yml /var/ald/ald_config.yml
 COPY --chown=ald:ald library /etc/ansible/library
 COPY --chown=ald:ald module_utils /etc/ansible/module_utils
 COPY --chown=ald:ald roles /etc/ansible/roles
+COPY --chown=ald:ald collections /etc/ansible/collections 
 
 RUN for i in /home/ald/whls/ignition*.whl; do if [ "$i" != "/home/ald/whls/ignition*.whl" ]; then pip install --no-warn-script-location --user "$i"; fi done \
  && for i in /home/ald/whls/*.whl; do pip install --no-warn-script-location --user "$i"; done \
@@ -44,7 +45,10 @@ RUN for i in /home/ald/whls/ignition*.whl; do if [ "$i" != "/home/ald/whls/ignit
  && chmod +x /home/ald/.local/bin/kubectl
 
 # Install extra requirements to be built into the driver
-RUN pip install -r /home/ald/extra-requirements.txt
+USER root
+RUN apk add --no-cache gcc
+RUN pip3 install omsdk==1.2.445
+RUN pip3 install -r /home/ald/extra-requirements.txt
 
 USER root
 COPY --chown=ald:0 ansible.cfg /etc/ansible/ansible.cfg

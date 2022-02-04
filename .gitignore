@@ -112,11 +112,11 @@ tests/resources/ansible-copy
 
 # Docker
 docker/whls/
-docker/library/*
+#docker/library/*
 !docker/library/.gitkeep 
 docker/roles/*
 !docker/roles/.gitkeep 
-docker/module_utils/*
+#docker/module_utils/*
 !docker/module_utils/.gitkeep 
 
 # IDEs
