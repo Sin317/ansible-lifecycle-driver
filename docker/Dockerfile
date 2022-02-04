@@ -44,12 +44,16 @@ RUN for i in /home/ald/whls/ignition*.whl; do if [ "$i" != "/home/ald/whls/ignit
  && chmod +x /home/ald/.local/bin/kubectl
 
 # Install extra requirements to be built into the driver
-RUN pip install -r /home/ald/extra-requirements.txt
+USER root
+RUN apk add --no-cache gcc
+RUN pip3 install omsdk==1.2.445
+RUN pip3 install -r /home/ald/extra-requirements.txt
 
 USER root
 COPY --chown=ald:0 ansible.cfg /etc/ansible/ansible.cfg
 COPY --chown=ald:0 ald_config.yml /var/ald/ald_config.yml 
-
+COPY --chown=ald:0 dellemc-openmanage-5.1.0.tar.gz /home/ald/dellemc-openmanage-5.1.0.tar.gz
+RUN ansible-galaxy collection install /home/ald/dellemc-openmanage-5.1.0.tar.gz
 # Set HOME variable for OCP arbitrary user
 ENV HOME /home/ald
 
